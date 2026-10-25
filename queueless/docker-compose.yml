@@ -1,0 +1,35 @@
+# Runs everything (MySQL + the app) with one command:  docker compose up --build
+# Then open http://localhost:8080
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: queueless
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-queueless_root}
+    volumes:
+      - queueless-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-queueless_root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://db:3306/queueless?useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-queueless_root}
+      JWT_SECRET: ${JWT_SECRET:-change-this-to-a-long-random-string-of-32-plus-chars}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@queueless.edu}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@123}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Kolkata}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+
+volumes:
+  queueless-db:

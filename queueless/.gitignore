@@ -1,0 +1,7 @@
+node_modules/
+dist/
+target/
+.env
+*.log
+.idea/
+backend/src/main/resources/static/

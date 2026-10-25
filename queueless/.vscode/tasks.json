@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run back end (Spring Boot)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run front end (React)",
+      "type": "shell",
+      "command": "npm install && npm run dev",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run both",
+      "dependsOn": ["Run back end (Spring Boot)", "Run front end (React)"],
+      "problemMatcher": []
+    }
+  ]
+}
