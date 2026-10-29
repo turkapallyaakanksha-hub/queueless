@@ -10,6 +10,6 @@ RUN mvn -B -q clean package -DskipTests
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/queueless.jar app.jar
-ENV PORT=8080
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENV PORT=10000
+EXPOSE 10000
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT} -jar /app/app.jar"]
