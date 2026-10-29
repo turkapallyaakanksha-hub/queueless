@@ -65,33 +65,31 @@ Open http://localhost:8080. This builds the React app, bundles it into the Sprin
 
 ## 3. Deploy
 
-The Dockerfile produces one image that serves both the React site and the API, so you only deploy one app plus a MySQL database.
+### Recommended Setup: Railway (Backend + MySQL) & Vercel (Frontend)
 
-**Option A: Render / Railway / Fly.io (container hosting)**
-1. Push the project to GitHub.
-2. Create a hosted MySQL 8 database (several providers offer one, for example Railway or Aiven; check which free tiers are currently available). Copy its host, user and password.
-3. Create a web service from the repository using the root `Dockerfile`.
-4. Set these environment variables:
+#### Step 1: Deploy Backend & MySQL on Railway
+1. Go to [railway.app](https://railway.app) and create a new project.
+2. Click **+ New** > **Database** > **Add MySQL**.
+3. Click **+ New** > **GitHub Repo** > Select this repository (`queueless`).
+4. In the service settings for the repository:
+   - Set **Root Directory** to `backend`.
+   - Railway will build using `backend/Dockerfile` or Nixpacks automatically.
+5. In the **Variables** tab of the backend service:
+   - Add reference variables from MySQL (Railway usually provisions `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE` or you can reference them).
+   - `JWT_SECRET`: A secure 32+ character random secret.
+   - `CORS_ORIGINS`: Allowed origins, e.g. `https://*.vercel.app` (or your specific Vercel URL once deployed).
+6. Under **Settings** > **Networking**, click **Generate Domain** to get your public backend URL (e.g. `https://queueless-backend.up.railway.app`).
 
-| Variable | Meaning |
-|----------|---------|
-| `DB_URL` | e.g. `jdbc:mysql://HOST:3306/queueless?useSSL=true` |
-| `DB_USERNAME`, `DB_PASSWORD` | database login |
-| `JWT_SECRET` | long random string, 32+ characters |
-| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | first admin account (change the defaults!) |
-| `APP_TIMEZONE` | your campus time zone, e.g. `Asia/Kolkata` (decides when token numbers reset each day) |
-| `SEED_DEMO_DATA` | `false` for a real launch (skips the demo student and sample history) |
-
-The platform provides `PORT` automatically.
-
-**Option B: a VPS or college server**
-Install Docker, copy the project, copy `.env.example` to `.env` with real values, then run `docker compose up -d --build`.
-Put Nginx or Caddy in front for HTTPS.
-
-**Option C: React and Spring Boot on separate hosts** (for example Netlify/Vercel + Render)
-- Build the React app with `VITE_API_URL=https://your-api-host npm run build` and host `frontend/dist`.
-  Because the site uses client-side routes, add a rewrite of all paths to `/index.html` on that host.
-- On the API set `CORS_ORIGINS=https://your-react-site`.
+#### Step 2: Deploy Frontend on Vercel
+1. Go to [vercel.com](https://vercel.com) and click **Add New** > **Project**.
+2. Import this GitHub repository (`queueless`).
+3. In the configuration:
+   - Set **Root Directory** to `frontend`.
+   - Framework preset will automatically detect **Vite**.
+4. In **Environment Variables**, add:
+   - `VITE_API_URL`: Your Railway backend URL (e.g. `https://queueless-backend.up.railway.app`)
+5. Click **Deploy**.
+6. (Optional) Once Vercel assigns your production URL (e.g., `https://queueless.vercel.app`), update `CORS_ORIGINS` in Railway with that exact URL if desired.
 
 Before going live: change `ADMIN_PASSWORD` and `JWT_SECRET`, serve over HTTPS, and set `SEED_DEMO_DATA=false`.
 

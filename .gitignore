@@ -2,6 +2,9 @@ node_modules/
 dist/
 target/
 .env
+.env*.local
 *.log
 .idea/
+.vscode/
 backend/src/main/resources/static/
+.DS_Store
