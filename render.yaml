@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: queueless-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: free
+    envVars:
+      - key: CORS_ORIGINS
+        value: https://*.vercel.app,*
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
