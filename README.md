@@ -13,6 +13,20 @@ queueless/
   Dockerfile, docker-compose.yml   one-command run and deployment
 ```
 
+## Live Deployments
+
+- **Frontend (Vercel):** [https://frontend-six-alpha-88.vercel.app](https://frontend-six-alpha-88.vercel.app)
+- **Backend API (Render):** [https://queueless-backend-lyg1.onrender.com](https://queueless-backend-lyg1.onrender.com)
+- **Database (Render PostgreSQL):** `queueless-db`
+
+### Sample accounts
+| Role    | Email                  | Password     |
+|---------|------------------------|--------------|
+| Admin   | admin@queueless.edu    | Admin@123    |
+| Student | student@queueless.edu  | Student@123  |
+
+---
+
 ## 1. Run it on your computer (VS Code)
 
 ### Install once
